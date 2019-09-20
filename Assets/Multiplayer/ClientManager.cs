@@ -16,6 +16,7 @@ namespace Multiplayer
         #endregion
 
         [SerializeField] GameObject playerObject;
+        public GameObject bulletObject;
         int clientID;
         List<GameObject> players = new List<GameObject>();
         public Player myPlayer = new Player();
