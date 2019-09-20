@@ -28,6 +28,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && bulletsCount > 0 && !reloading)
         {
+            ClientBehaviour.SendShoot();
             Instantiate(ClientManager.instance.bulletObject, anchor.position, anchor.rotation);
             bulletsCount--;
         }

@@ -83,5 +83,18 @@ namespace Multiplayer
             this.players.ForEach((gm) => players.Add(gm.GetComponent<PlayerClient>().player));
             return players;
         }
+        public static void MakeShoot(int playerID)
+        {
+            if (instance == null) return;
+            for (int i = 0; i < instance.players.Count; i++)
+            {
+                if (instance.players[i].GetComponent<PlayerClient>().player.ID == playerID)
+                {
+                    instance.players[i].GetComponent<PlayerClient>().Shoot();
+                    return;
+                }
+            }
+
+        }
     }
 }

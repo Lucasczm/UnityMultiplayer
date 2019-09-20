@@ -2,9 +2,19 @@
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Multiplayer;
+using System;
 
 public class ClientBehaviour : MonoBehaviour
 {
+
+    #region Singleton
+    public static ClientBehaviour instance;
+    void Awake()
+    {
+        if (instance != null) return;
+        instance = this;
+    }
+    #endregion
     struct PendingPing
     {
         public int id;
@@ -18,6 +28,7 @@ public class ClientBehaviour : MonoBehaviour
     // The ping stats are two integers, time for last ping and number of pings
     private int m_lastPingTime;
     private int m_numPingsSent;
+
 
     void Start()
     {
@@ -76,7 +87,7 @@ public class ClientBehaviour : MonoBehaviour
                 var readerCtx = default(DataStreamReader.Context);
                 byte data = strm.ReadByte(ref readerCtx);
                 CMD command = (CMD)data;
-
+                Debug.Log("Client CMD " + Enum.GetName(typeof(CMD), command));
                 switch (command)
                 {
                     case CMD.CONNECT:
@@ -93,6 +104,10 @@ public class ClientBehaviour : MonoBehaviour
                         ClientManager.OnDisconnectPlayer(playerID);
                         Debug.Log("Client R Disconneted player: " + playerID);
                         break;
+                    case CMD.SHOOT:
+                        var connID = strm.ReadInt(ref readerCtx);
+                        ClientManager.MakeShoot(connID);
+                        break;
                 }
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
@@ -102,5 +117,12 @@ public class ClientBehaviour : MonoBehaviour
                 m_clientToServerConnection = default(NetworkConnection);
             }
         }
+    }
+    public static void SendShoot()
+    {
+        if (instance == null) return;
+        var shootData = new DataStreamWriter(1, Allocator.Temp);
+        shootData.Write((byte)CMD.SHOOT);
+        instance.m_clientToServerConnection.Send(instance.m_ClientDriver, shootData);
     }
 }

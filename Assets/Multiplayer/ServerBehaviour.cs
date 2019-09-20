@@ -56,6 +56,7 @@ public class ServerBehaviour : MonoBehaviour
             // m_ServerDriver.PopEventForConnection(con, out strm);
             //m_ServerDriver.Send(NetworkPipeline.Null, con, idData);
         }
+        List<Player> clientList = ServerManager.GetClients();
 
         for (int i = 0; i < m_connections.Length; ++i)
         {
@@ -64,6 +65,7 @@ public class ServerBehaviour : MonoBehaviour
             // Pop all events for the connection
             while ((cmd = m_ServerDriver.PopEventForConnection(m_connections[i], out strm)) != NetworkEvent.Type.Empty)
             {
+
                 if (cmd == NetworkEvent.Type.Data)
                 {
                     var readerCtx = default(DataStreamReader.Context);
@@ -90,8 +92,17 @@ public class ServerBehaviour : MonoBehaviour
                             Debug.Log("Server R Type :" + command + " id: " + player.ID + " " + player.position + " " + player.rotation);
                             ServerManager.OnUpdatePlayer(player);
                             break;
+                        case CMD.SHOOT:
+                            var shootBye = NetworkLayer.newCommand(CMD.SHOOT, BitConverter.GetBytes(m_connections[i].InternalId));
+                            var shootData = new DataStreamWriter(shootBye.Length, Allocator.Temp);
+                            shootData.Write(shootBye);
+                            for (int y = 0; y < m_connections.Length; ++y)
+                            {
+                                if (m_connections[i] != m_connections[y])
+                                    m_ServerDriver.Send(NetworkPipeline.Null, m_connections[y], shootData);
+                            };
+                            break;
                     }
-                    List<Player> clientList = ServerManager.GetClients();
                     for (int clientIndex = 0; clientIndex < clientList.Count; clientIndex++)
                     {
                         byte[] playerData = NetworkLayer.newCommand(CMD.PLAYER_UPDATE, ByteConverter.playerToByte(clientList[clientIndex]));
@@ -107,13 +118,13 @@ public class ServerBehaviour : MonoBehaviour
                     // This connection no longer exist, remove it from the list
                     // The next iteration will operate on the new connection we swapped in so as long as it exist the
                     // loop can continue
-                    byte[] disconnectData = NetworkLayer.newCommand(CMD.PLAYER_DISCONNECTED,BitConverter.GetBytes(m_connections[i].InternalId));
+                    byte[] disconnectData = NetworkLayer.newCommand(CMD.PLAYER_DISCONNECTED, BitConverter.GetBytes(m_connections[i].InternalId));
+                    var player = new DataStreamWriter(disconnectData.Length, Allocator.Temp);
+                    player.Write(disconnectData);
                     ServerManager.OnDisconnectPlayer(m_connections[i].InternalId);
                     m_connections.RemoveAtSwapBack(i);
                     for (int y = 0; y < m_connections.Length; ++y)
                     {
-                        var player = new DataStreamWriter(disconnectData.Length, Allocator.Temp);
-                        player.Write(disconnectData);
                         m_ServerDriver.Send(NetworkPipeline.Null, m_connections[y], player);
                     };
                     if (i >= m_connections.Length)

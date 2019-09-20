@@ -1,3 +1,4 @@
+using Multiplayer;
 using UnityEngine;
 namespace Game.Client
 {
@@ -5,9 +6,12 @@ namespace Game.Client
     {
         public Player player;
         new Rigidbody rigidbody;
+        Transform hand, anchor;
         void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
+            hand = transform.GetChild(0).GetComponent<Transform>();
+            anchor = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Transform>();
         }
         public void setPosition(Vector3 position)
         {
@@ -17,9 +21,14 @@ namespace Game.Client
         {
             transform.rotation = new Quaternion(0, rotation.y, 0, rotation.w).normalized;
         }
-        public void updatePlayer(Player player){
+        public void updatePlayer(Player player)
+        {
             rigidbody.MovePosition(player.position);
-            transform.rotation = player.rotation;
+            hand.rotation = player.rotation;
+        }
+        public void Shoot()
+        {
+            Instantiate(ClientManager.instance.bulletObject, anchor.position, anchor.rotation);
         }
     }
 }
