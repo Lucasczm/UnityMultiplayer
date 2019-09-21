@@ -3,6 +3,7 @@ using Unity.Networking.Transport;
 using Unity.Collections;
 using Multiplayer;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ClientBehaviour : MonoBehaviour
 {
@@ -28,33 +29,60 @@ public class ClientBehaviour : MonoBehaviour
     // The ping stats are two integers, time for last ping and number of pings
     private int m_lastPingTime;
     private int m_numPingsSent;
+    public string m_CustomIp;
+    public static NetworkEndPoint ServerEndPoint { get; private set; }
 
     void Start()
     {
         // Create a NetworkDriver for the client. We could bind to a specific address but in this case we rely on the
         // implicit bind since we do not need to bing to anything special
         m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
+        ServerEndPoint = default(NetworkEndPoint);
+        ushort port = 9000;
+        if (string.IsNullOrEmpty(m_CustomIp))
+        {
+            var endpoint = NetworkEndPoint.LoopbackIpv4;
+            endpoint.Port = port;
+            ServerEndPoint = endpoint;
+        }
+        else
+        {
+            string[] endpoint = m_CustomIp.Split(':');
+            ushort newPort = 0;
+            if (endpoint.Length > 1 && ushort.TryParse(endpoint[1], out newPort))
+                port = newPort;
+            Debug.Log($"Connecting to PingServer at {endpoint[0]}:{port}.");
+            ServerEndPoint = NetworkEndPoint.Parse(endpoint[0], port);
+        }
+
     }
 
     void OnDestroy()
     {
         m_ClientDriver.Dispose();
+        ServerEndPoint = default(NetworkEndPoint);
     }
-
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            ServerEndPoint = default(NetworkEndPoint);
+            SceneManager.LoadScene(0);
+        }
+    }
     void FixedUpdate()
     {
         // Update the ping client UI with the ping statistics computed by teh job scheduled previous frame since that
         // is now guaranteed to have completed
-        PingClientUIBehaviour.UpdateStats(m_numPingsSent, m_lastPingTime);
+        //PingClientUIBehaviour.UpdateStats(m_numPingsSent, m_lastPingTime);
 
         // Update the NetworkDriver. It schedules a job so we must wait for that job with Complete
         m_ClientDriver.ScheduleUpdate().Complete();
 
         // If the client ui indicates we should be sending pings but we do not have an active connection we create one
-        if (PingClientUIBehaviour.ServerEndPoint.IsValid && !m_clientToServerConnection.IsCreated)
-            m_clientToServerConnection = m_ClientDriver.Connect(PingClientUIBehaviour.ServerEndPoint);
+        if (ServerEndPoint.IsValid && !m_clientToServerConnection.IsCreated)
+            m_clientToServerConnection = m_ClientDriver.Connect(ServerEndPoint);
         // If the client ui indicates we should not be sending pings but we do have a connection we close that connection
-        if (!PingClientUIBehaviour.ServerEndPoint.IsValid && m_clientToServerConnection.IsCreated)
+        if (!ServerEndPoint.IsValid && m_clientToServerConnection.IsCreated)
         {
             ClientManager.UnregisterPlayer();
             m_clientToServerConnection.Disconnect(m_ClientDriver);
@@ -86,7 +114,7 @@ public class ClientBehaviour : MonoBehaviour
                 var readerCtx = default(DataStreamReader.Context);
                 byte data = strm.ReadByte(ref readerCtx);
                 CMD command = (CMD)data;
-                
+
                 switch (command)
                 {
                     case CMD.CONNECT:

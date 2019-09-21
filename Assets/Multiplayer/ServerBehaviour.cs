@@ -126,6 +126,7 @@ public class ServerBehaviour : MonoBehaviour
                     // This connection no longer exist, remove it from the list
                     // The next iteration will operate on the new connection we swapped in so as long as it exist the
                     // loop can continue
+                    Debug.Log("Desconnected " + m_connections[i].InternalId);
                     byte[] disconnectData = NetworkLayer.newCommand(CMD.PLAYER_DISCONNECTED, BitConverter.GetBytes(m_connections[i].InternalId));
                     var player = new DataStreamWriter(disconnectData.Length, Allocator.Temp);
                     player.Write(disconnectData);

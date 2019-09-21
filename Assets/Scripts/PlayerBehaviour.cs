@@ -12,19 +12,25 @@ public class PlayerBehaviour : MonoBehaviour
     bool reloading;
     void Start()
     {
+        transform.tag = "MainPlayer";
         rigidbody = GetComponent<Rigidbody>();
         hand = transform.GetChild(0).GetComponent<Transform>();
         anchor = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Transform>();
         //        Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = true;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
-
     }
     void FixedUpdate()
     {
         Rotation();
         Move();
         Shoot();
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            rigidbody.isKinematic = true;
+            transform.position = ClientManager.GetSpawn();
+            rigidbody.isKinematic = false;
+        }
     }
     void Shoot()
     {
@@ -87,9 +93,14 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void OnDestroy()
     {
-       // Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = false;
+        // Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = false;
     }
-
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.LogWarning("COL t "+ other.tag);
+        if (other.CompareTag("WallKiller"))
+            Die();
+    }
     public void Die()
     {
         ClientBehaviour.SendDie();
