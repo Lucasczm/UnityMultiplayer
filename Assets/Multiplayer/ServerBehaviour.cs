@@ -82,14 +82,12 @@ public class ServerBehaviour : MonoBehaviour
                             byte[] idData = NetworkLayer.newCommand(CMD.CONNECT, BitConverter.GetBytes(id));
                             var newID = new DataStreamWriter(idData.Length, Allocator.Temp);
                             newID.Write(idData);
-                            // Send the pong message with the same id as the ping
                             m_ServerDriver.Send(NetworkPipeline.Null, m_connections[i], newID);
                             break;
 
                         case CMD.PLAYER_UPDATE:
                             byte[] playerByte = strm.ReadBytesAsArray(ref readerCtx, 32);
                             var player = ByteConverter.toPlayer(playerByte);
-                            Debug.Log("Server R Type :" + command + " id: " + player.ID + " " + player.position + " " + player.rotation);
                             ServerManager.OnUpdatePlayer(player);
                             break;
                         case CMD.SHOOT:
@@ -100,6 +98,16 @@ public class ServerBehaviour : MonoBehaviour
                             {
                                 if (m_connections[i] != m_connections[y])
                                     m_ServerDriver.Send(NetworkPipeline.Null, m_connections[y], shootData);
+                            };
+                            break;
+                        case CMD.PLAYER_DIE:
+                            Debug.LogWarning(" S DIE");
+                            var dieByte = NetworkLayer.newCommand(CMD.PLAYER_DIE, BitConverter.GetBytes(m_connections[i].InternalId));
+                            var dieData = new DataStreamWriter(dieByte.Length, Allocator.Temp);
+                            dieData.Write(dieByte);
+                            for (int y = 0; y < m_connections.Length; ++y)
+                            {
+                                m_ServerDriver.Send(NetworkPipeline.Null, m_connections[y], dieData);
                             };
                             break;
                     }

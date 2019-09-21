@@ -15,8 +15,10 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         hand = transform.GetChild(0).GetComponent<Transform>();
         anchor = transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Transform>();
-        Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = true;
+        //        Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = true;
         rigidbody.isKinematic = false;
+        rigidbody.useGravity = true;
+
     }
     void FixedUpdate()
     {
@@ -31,6 +33,7 @@ public class PlayerBehaviour : MonoBehaviour
             ClientBehaviour.SendShoot();
             Instantiate(ClientManager.instance.bulletObject, anchor.position, anchor.rotation);
             bulletsCount--;
+            UIManager.UpdateBar(bulletsCount, 150f);
         }
         if (bulletsCount <= 0 && !reloading)
         {
@@ -84,15 +87,23 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void OnDestroy()
     {
-        Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = false;
+       // Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = false;
     }
 
+    public void Die()
+    {
+        ClientBehaviour.SendDie();
+        rigidbody.isKinematic = true;
+        transform.position = ClientManager.GetSpawn();
+        rigidbody.isKinematic = false;
+    }
     IEnumerator ReloadAmmo()
     {
         reloadingTime = 0f;
         while (reloadingTime < 3f)
         {
             reloadingTime += Time.deltaTime;
+            UIManager.UpdateBar(reloadingTime, 3f);
             yield return null;
         }
         bulletsCount = 150;

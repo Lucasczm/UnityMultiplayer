@@ -18,18 +18,24 @@ namespace Multiplayer
         [SerializeField] GameObject playerObject;
         public GameObject bulletObject;
         int clientID;
+        Transform spawn1, spawn2;
         List<GameObject> players = new List<GameObject>();
         public Player myPlayer = new Player();
         public bool started;
         private GameObject gm;
         void Start()
         {
-            // RegisterPlayer();
+            spawn1 = GameObject.FindGameObjectWithTag("spawn1").transform;
+            spawn2 = GameObject.FindGameObjectWithTag("spawn2").transform;
+        }
+        public static Vector3 GetSpawn()
+        {
+            return (instance.myPlayer.ID == 0) ? instance.spawn1.position : instance.spawn2.position;
         }
         public void RegisterPlayer(int connectionID)
         {
             myPlayer.ID = connectionID;
-            GameObject player = Instantiate(playerObject);
+            GameObject player = Instantiate(playerObject, GetSpawn(), Quaternion.identity);
             player.AddComponent(typeof(PlayerBehaviour));
             gm = player;
             started = true;
@@ -95,6 +101,10 @@ namespace Multiplayer
                 }
             }
 
+        }
+        public static void ScoreIncrease(int playerID)
+        {
+            UIManager.IncreaseScore(playerID);
         }
     }
 }

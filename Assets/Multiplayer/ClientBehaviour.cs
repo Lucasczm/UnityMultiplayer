@@ -29,7 +29,6 @@ public class ClientBehaviour : MonoBehaviour
     private int m_lastPingTime;
     private int m_numPingsSent;
 
-
     void Start()
     {
         // Create a NetworkDriver for the client. We could bind to a specific address but in this case we rely on the
@@ -87,7 +86,7 @@ public class ClientBehaviour : MonoBehaviour
                 var readerCtx = default(DataStreamReader.Context);
                 byte data = strm.ReadByte(ref readerCtx);
                 CMD command = (CMD)data;
-                Debug.Log("Client CMD " + Enum.GetName(typeof(CMD), command));
+                
                 switch (command)
                 {
                     case CMD.CONNECT:
@@ -96,7 +95,6 @@ public class ClientBehaviour : MonoBehaviour
                     case CMD.PLAYER_UPDATE:
                         byte[] playerByte = strm.ReadBytesAsArray(ref readerCtx, 32);
                         var player = ByteConverter.toPlayer(playerByte);
-                        Debug.Log("Client R Type :" + command + " id: " + player.ID + " " + player.position + " " + player.rotation);
                         ClientManager.OnUpdatePlayer(player);
                         break;
                     case CMD.PLAYER_DISCONNECTED:
@@ -107,6 +105,14 @@ public class ClientBehaviour : MonoBehaviour
                     case CMD.SHOOT:
                         var connID = strm.ReadInt(ref readerCtx);
                         ClientManager.MakeShoot(connID);
+                        break;
+                    case CMD.PLAYER_DIE:
+                        Debug.LogWarning(" C DIE");
+                        var scoreID = strm.ReadInt(ref readerCtx);
+                        ClientManager.ScoreIncrease(scoreID);
+                        break;
+                    default:
+                        Debug.Log("Client CMD " + Enum.GetName(typeof(CMD), command));
                         break;
                 }
             }
@@ -124,5 +130,12 @@ public class ClientBehaviour : MonoBehaviour
         var shootData = new DataStreamWriter(1, Allocator.Temp);
         shootData.Write((byte)CMD.SHOOT);
         instance.m_clientToServerConnection.Send(instance.m_ClientDriver, shootData);
+    }
+    public static void SendDie()
+    {
+        if (instance == null) return;
+        var dieData = new DataStreamWriter(1, Allocator.Temp);
+        dieData.Write((byte)CMD.PLAYER_DIE);
+        instance.m_clientToServerConnection.Send(instance.m_ClientDriver, dieData);
     }
 }
