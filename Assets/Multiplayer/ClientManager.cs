@@ -30,6 +30,7 @@ namespace Multiplayer
         }
         public static Vector3 GetSpawn()
         {
+            Debug.Log("Returning " + ((instance.myPlayer.ID == 0) ? "0" : "1"));
             return (instance.myPlayer.ID == 0) ? instance.spawn1.position : instance.spawn2.position;
         }
         public void RegisterPlayer(int connectionID)
@@ -105,6 +106,9 @@ namespace Multiplayer
         public static void ScoreIncrease(int playerID)
         {
             UIManager.IncreaseScore(playerID);
+            if (instance == null) return;
+            if (ClientManager.instance.myPlayer.ID != playerID)
+                instance.gm.GetComponent<PlayerBehaviour>().RestorePosition();
         }
     }
 }

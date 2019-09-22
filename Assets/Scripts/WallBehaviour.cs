@@ -6,8 +6,7 @@ public class WallBehaviour : MonoBehaviour
 {    
     void OnTriggerEnter(Collider other)
     {
-        var playerB = other.GetComponent<PlayerBehaviour>();       
-        if(playerB == null) return;
-        playerB.Die();
+        if(other.CompareTag("MainPlayer"))
+            other.GetComponent<PlayerBehaviour>().Die();       
     }
 }

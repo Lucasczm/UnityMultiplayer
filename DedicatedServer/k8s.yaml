@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: game-server-unity
+spec:
+  selector:
+    matchLabels:
+      app: game-server-unity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: game-server-unity
+    spec:
+      containers:
+        - name: game-server-unity
+          image: lucasczm/game-server-unity:v1
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  selector:
+    app: game-server-unity
+  type: NodePort
+  ports:
+    - protocol: UDP
+      port: 9000

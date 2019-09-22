@@ -589,6 +589,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 662686698}
+  - component: {fileID: 662686700}
+  - component: {fileID: 662686699}
   m_Layer: 5
   m_Name: Score
   m_TagString: Untagged
@@ -617,9 +619,47 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000005722046, y: -78.65}
-  m_SizeDelta: {x: 584.2, y: 157.31}
+  m_AnchoredPosition: {x: 0, y: -86.98}
+  m_SizeDelta: {x: 675.4, y: 75.8}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &662686699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662686697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.41960785}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &662686700
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662686697}
+  m_CullTransparentMesh: 0
 --- !u!1 &701746102
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,6 +1047,7 @@ GameObject:
   - component: {fileID: 801245088}
   - component: {fileID: 801245087}
   - component: {fileID: 801245086}
+  - component: {fileID: 801245089}
   m_Layer: 0
   m_Name: Top
   m_TagString: WallKiller
@@ -1087,6 +1128,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801245084}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &801245089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801245084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deea038e7c065f74a8c9d72f0f046b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &806488960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,7 +1187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf70054960847047857ba06c34e79d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CustomIp: 
+  m_CustomIp: 173.193.82.100
+  port: 31975
 --- !u!4 &806488963
 Transform:
   m_ObjectHideFlags: 0
@@ -1817,6 +1871,7 @@ GameObject:
   - component: {fileID: 1598245872}
   - component: {fileID: 1598245871}
   - component: {fileID: 1598245870}
+  - component: {fileID: 1598245873}
   m_Layer: 0
   m_Name: Right
   m_TagString: WallKiller
@@ -1897,6 +1952,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598245868}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1598245873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598245868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deea038e7c065f74a8c9d72f0f046b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1633164044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2100,6 +2167,7 @@ GameObject:
   - component: {fileID: 1812228142}
   - component: {fileID: 1812228141}
   - component: {fileID: 1812228140}
+  - component: {fileID: 1812228143}
   m_Layer: 0
   m_Name: Left
   m_TagString: WallKiller
@@ -2180,6 +2248,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812228138}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1812228143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812228138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deea038e7c065f74a8c9d72f0f046b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1876953667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,6 +2272,7 @@ GameObject:
   - component: {fileID: 1876953671}
   - component: {fileID: 1876953670}
   - component: {fileID: 1876953669}
+  - component: {fileID: 1876953672}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: WallKiller
@@ -2272,6 +2353,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876953667}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1876953672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876953667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deea038e7c065f74a8c9d72f0f046b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1971356551
 GameObject:
   m_ObjectHideFlags: 0

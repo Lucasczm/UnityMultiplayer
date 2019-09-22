@@ -12,13 +12,13 @@ public class ServerBehaviour : MonoBehaviour
     private NativeList<NetworkConnection> m_connections;
 
     private JobHandle m_updateHandle;
-
+    public ushort port = 9000;
     void Start()
     {
         // Create the server driver, bind it to a port and start listening for incoming connections
         m_ServerDriver = new UdpNetworkDriver(new INetworkParameter[0]);
         var addr = NetworkEndPoint.AnyIpv4;
-        addr.Port = 9000;
+        addr.Port = port;
         if (m_ServerDriver.Bind(addr) != 0)
             Debug.Log("Failed to bind to port 9000");
         else

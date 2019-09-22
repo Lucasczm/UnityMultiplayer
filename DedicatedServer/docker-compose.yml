@@ -1,0 +1,9 @@
+version: '3'
+services:
+  unity-server:
+    build:
+      context: .
+    image: lucasczm/game-server-unity:v1
+    restart: unless-stopped
+    ports:
+      - "9000:9000/udp"

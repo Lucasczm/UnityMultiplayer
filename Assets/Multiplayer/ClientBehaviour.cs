@@ -30,6 +30,7 @@ public class ClientBehaviour : MonoBehaviour
     private int m_lastPingTime;
     private int m_numPingsSent;
     public string m_CustomIp;
+    public ushort port = 9000;
     public static NetworkEndPoint ServerEndPoint { get; private set; }
 
     void Start()
@@ -38,7 +39,6 @@ public class ClientBehaviour : MonoBehaviour
         // implicit bind since we do not need to bing to anything special
         m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
         ServerEndPoint = default(NetworkEndPoint);
-        ushort port = 9000;
         if (string.IsNullOrEmpty(m_CustomIp))
         {
             var endpoint = NetworkEndPoint.LoopbackIpv4;

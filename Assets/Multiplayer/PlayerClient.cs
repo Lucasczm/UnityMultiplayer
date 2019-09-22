@@ -5,7 +5,7 @@ namespace Game.Client
     public class PlayerClient : MonoBehaviour
     {
         public Player player;
-        new Rigidbody rigidbody;
+        Rigidbody rigidbody;
         Transform hand, anchor;
         void Start()
         {

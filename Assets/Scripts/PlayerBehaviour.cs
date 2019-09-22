@@ -5,7 +5,7 @@ using System.Collections;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    new Rigidbody rigidbody;
+    Rigidbody rigidbody;
     Transform hand, anchor;
     public float playerSpeed = 2, jumpForce = 6, groundChecker = 1.05f;
     float bulletsCount = 150, reloadingTime;
@@ -25,6 +25,9 @@ public class PlayerBehaviour : MonoBehaviour
         Rotation();
         Move();
         Shoot();
+    }
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.K))
         {
             rigidbody.isKinematic = true;
@@ -86,7 +89,6 @@ public class PlayerBehaviour : MonoBehaviour
         hand.transform.rotation = Quaternion.Euler(new Vector3(angle, 0, 0));
         ClientManager.instance.myPlayer.rotation = hand.transform.rotation;
     }
-
     bool isGround()
     {
         return Physics.Raycast(transform.position, -Vector3.up, groundChecker);
@@ -95,15 +97,13 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // Camera.main.gameObject.GetComponent<CameraBehaviour>().enabled = false;
     }
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.LogWarning("COL t "+ other.tag);
-        if (other.CompareTag("WallKiller"))
-            Die();
-    }
     public void Die()
     {
         ClientBehaviour.SendDie();
+        RestorePosition();
+    }
+    public void RestorePosition()
+    {
         rigidbody.isKinematic = true;
         transform.position = ClientManager.GetSpawn();
         rigidbody.isKinematic = false;
