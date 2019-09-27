@@ -71,9 +71,6 @@ public class ServerBehaviour : MonoBehaviour
                     var readerCtx = default(DataStreamReader.Context);
                     byte data = strm.ReadByte(ref readerCtx);
                     CMD command = (CMD)data;
-                    //    // var player = ByteConverter.toPlayer(data);
-                    //     Debug.Log("Server R Type :"+ command+" id: "+sizeof(byte));// + player.ID + " " + player.position);
-
                     switch (command)
                     {
                         case CMD.CONNECT:
