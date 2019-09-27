@@ -7,7 +7,6 @@ namespace Multiplayer
     {
         #region Singleton 
         public static ServerManager instance;
-        // [SerializeField] GameObject playerObject;
 
         List<Player> clients = new List<Player>();
         void Awake()
